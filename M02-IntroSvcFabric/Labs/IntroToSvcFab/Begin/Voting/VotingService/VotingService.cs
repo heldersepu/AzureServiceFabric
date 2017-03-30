@@ -60,19 +60,16 @@ namespace VotingService
                         // Log whether the value existed or not.
                         ServiceEventSource.Current.ServiceMessage(this.Context,
                             "Current Counter Value: {0}",
-                     result.HasValue ? result.Value.ToString()
-                     : "Value does not exist.");
+                            result.HasValue ? result.Value.ToString(): "Value does not exist.");
 
                         // If the "Counter-1" key doesn't exist, set its value to 0
                         // else add 1 to its current value.
-                        await voteDictionary.AddOrUpdateAsync(tx, voteItem, 0,
-                            (k, v) => ++v);
+                        await voteDictionary.AddOrUpdateAsync(tx, voteItem, 0, (k, v) => ++v);
 
                         // Next block of code will enumerate votes from the reliable
                         // dictionary for presentation.
                         // First, obtain enumerator for (voteDictionary) reliable dictionary
-                        var collectionEnumerator = await
-                            voteDictionary.CreateEnumerableAsync(tx);
+                        var collectionEnumerator = await voteDictionary.CreateEnumerableAsync(tx);
                         // Secondly, construct presetation dictionary into which you will
                         // project vote results
                         var presentationDictionary = new Dictionary<string, int>();
@@ -92,7 +89,7 @@ namespace VotingService
                         // Query presentationDictionary projecting desired data shape
                         var q = from kvp in presentationDictionary
                                     //orderby kvp.Key // Intentionally commented out
-                                select $"Item={kvp.Key}, Votes={kvp.Value + 1}";
+                                select $"Item={kvp.Key}, <b>Votes={kvp.Value + 1}</b>";
                         output = String.Join("<br>\n", q);
 
                         // Committing transaction serializes changes and writes them to this
