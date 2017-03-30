@@ -93,7 +93,7 @@ namespace VotingService
                         var q = from kvp in presentationDictionary
                                     //orderby kvp.Key // Intentionally commented out
                                 select $"Item={kvp.Key}, Votes={kvp.Value + 1}";
-                        output = String.Join("<br>", q);
+                        output = String.Join("<br>\n", q);
 
                         // Committing transaction serializes changes and writes them to this
                         // partition's secondary replicas. If an exception is thrown
@@ -104,13 +104,18 @@ namespace VotingService
                     }
                 }
             }
-            catch (Exception ex) { output = ex.ToString(); }
+            catch (Exception ex)
+            {
+                output = ex.ToString();
+            }
+
             // Write response to client:
             using (var response = context.Response)
             {
                 if (output != null)
                 {
                     Byte[] outBytes = Encoding.UTF8.GetBytes(output);
+                    response.ContentType = "text/HTML";
                     response.OutputStream.Write(outBytes, 0, outBytes.Length);
                 }
             }
