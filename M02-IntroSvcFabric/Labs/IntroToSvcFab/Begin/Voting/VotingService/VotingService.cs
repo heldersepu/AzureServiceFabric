@@ -88,7 +88,7 @@ namespace VotingService
 
                         // Query presentationDictionary projecting desired data shape
                         var q = from kvp in presentationDictionary
-                                    //orderby kvp.Key // Intentionally commented out
+                                orderby kvp.Value descending
                                 select $"Item={kvp.Key}, <b>Votes={kvp.Value + 1}</b>";
                         output = String.Join("<br>\n", q);
 
@@ -111,7 +111,7 @@ namespace VotingService
             {
                 if (output != null)
                 {
-                    Byte[] outBytes = Encoding.UTF8.GetBytes(output);
+                    var outBytes = Encoding.UTF8.GetBytes($"<div style='font-size: 30px;font-family: monospace;'>{output}</div>");
                     response.ContentType = "text/HTML";
                     response.OutputStream.Write(outBytes, 0, outBytes.Length);
                 }
