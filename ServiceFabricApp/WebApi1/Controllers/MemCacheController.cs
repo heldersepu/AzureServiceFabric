@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Dynamic;
 using System.Runtime.Caching;
 using System.Web.Http;
 
@@ -23,7 +23,11 @@ namespace WebApi1.Controllers
             {
                 servername = (string)memCache;
             }
-            return Json(new KeyValuePair<string,bool> (servername, (memCache != null)));
+
+            dynamic o = new ExpandoObject();
+            o.MachineName = servername;
+            o.MemCache = (memCache != null);
+            return Json(o);
         }
     }
 }
